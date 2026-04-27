@@ -51,6 +51,46 @@ In this case:
 - Route params come from the URL, so they are strings by default.
 - Add `layout.tsx` if all nested product pages should share UI.
 
+## Metadata In This Folder
+
+This route now demonstrates both metadata patterns:
+
+- Static metadata in `app/products/page.tsx` using `export const metadata`.
+- Dynamic metadata in `app/products/[productId]/page.tsx` using `export async function generateMetadata`.
+
+### Static metadata (products list)
+
+```tsx
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Products',
+  description: 'Browse all products in the catalog.',
+};
+```
+
+### Dynamic metadata (product details)
+
+```tsx
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}): Promise<Metadata> {
+  const { productId } = await params;
+
+  return {
+    title: `Product ${productId}`,
+    description: `Details for product ${productId}.`,
+  };
+}
+```
+
+Use static metadata when values never change per route segment.
+Use `generateMetadata` when values depend on route params or fetched data.
+
 ## Quick Mental Model
 
 Folder structure becomes URL structure.
